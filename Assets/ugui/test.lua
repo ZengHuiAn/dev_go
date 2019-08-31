@@ -4,13 +4,16 @@
 --- DateTime: 2019-08-12 18:05
 ---
 
-local view = {}
+local View = {}
 
-print("start scripts")
-
-function view:awake()
+function View:Start()
     print("start scripts")
+    self:Call();
 end
 
-return view
+function View:Call()
+    print("Call")
+end
+
+return View
 

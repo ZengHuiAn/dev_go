@@ -7,11 +7,30 @@ namespace Snake
     public static class FileUtils
     {
 
-        public static string  ReadFile(string path,string fileName, string suffix = ".txt")
+        public static string ReadFile(string path, string fileName, string suffix = ".txt")
         {
-            string content= System.IO.File.ReadAllText(path + fileName + suffix);
+            string content = System.IO.File.ReadAllText(path + fileName + suffix);
 
             return content;
+        }
+
+        public static string envPath
+        {
+            get
+            {
+                string filepath = "";
+#if UNITY_EDITOR
+                filepath = UnityEngine.Application.dataPath + "/Lua/";
+
+#elif UNITY_IPHONE
+	        filepath = Application.dataPath +"/Raw/Lua/";
+ 
+#elif UNITY_ANDROID
+	        filepath = "jar:file://" + Application.dataPath + "!/assets/Lua/";
+ 
+#endif
+                return filepath;
+            }
         }
 
         public static byte[] LuaLoader(ref string fileName)
@@ -50,6 +69,6 @@ namespace Snake
             string content = FileUtils.ReadFile(filepath, convertName, ".lua");
             return content;
         }
-        
+
     }
 }
