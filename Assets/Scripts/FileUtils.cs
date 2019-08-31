@@ -77,7 +77,7 @@ namespace SGK
         public static string LoadStringFromFile(string fileName)
         {
 #if UNITY_EDITOR
-            string realFileName = LuaDirectory + "/" + fileName;
+            string realFileName = LuaDirectory + "/" + fileName.Replace(".", "/") + ".lua";
             string str = readStringFromAssets(realFileName);
             Debug.Log("读取文件内容\t"+str);
             if (str != null)

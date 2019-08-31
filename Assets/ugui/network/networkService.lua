@@ -29,8 +29,19 @@ local function Send(cmd, data, sn)
     end
 end
 
+
+local function Read()
+    if  ~conn then
+        return
+    end
+
+    local valueTB = conn:Read()
+
+end
+
 return {
     Connect = Connect,
-    Send = Send
+    Send = Send,
+    Read = Read
 }
 

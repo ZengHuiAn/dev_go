@@ -76,7 +76,7 @@ namespace Snake
                 using (MemoryStream m_stream = new MemoryStream())
                 {
                     m_stream.Write(bodyBytes, 0, (int)m_stream.Length);
-                    LuaTable msgTable = LuaController.Instance.LuaEnv.NewTable();
+                    LuaTable msgTable = SGK.LuaController.GetLuaState()?.NewTable();
                     object body = amf.Decode(m_stream);
                     return LuaConvert.ConvertLuaTable(body);
                 }

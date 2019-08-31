@@ -9,12 +9,14 @@ local View = {}
 function View:Start()
     print("start scripts")
     local loginBtn = self.LoginBtn
+    ChangeUIText(self.LoginText,"登录")
     RegistButtonEvent(loginBtn,self.Call)
 end
 
 function View:Call()
+
+
     print("Call")
 end
 
 return View
-

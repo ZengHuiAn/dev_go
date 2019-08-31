@@ -51,7 +51,6 @@ public static class ExampleGenConfig
                 typeof(UnityEngine.Debug),
                 typeof(Snake.LuaConvert),
                 typeof(Snake.Client),
-                typeof(XLuaBehaviour),
                 typeof(LuaManager),
             };
 

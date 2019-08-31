@@ -4,6 +4,10 @@ local tb = CS.Snake.LuaConvert.TestConvertTable();
 fmt = require("fmt.fmt")
 ---@type UnityEngine.GameObject
 
+
+require("regist")
+
+
 local network = require("network.networkService")
 function main()
     fmt.Println("main")
