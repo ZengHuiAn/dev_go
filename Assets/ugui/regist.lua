@@ -67,3 +67,24 @@ function ChangeUIText(obj,content)
 
     return false
 end
+
+StartCoroutine = function(func, ...)
+    local success, info = coroutine.resume(coroutine.create(func), ...);
+    if not success then
+        print("StartCoroutine error :",info)
+    end
+end
+
+local util = require('xlua.util')
+
+Yield = util.async_to_sync(function(to_yield, cb)
+    CS.SGK.CoroutineService.YieldAndCallback(to_yield, cb);
+end);
+
+function WaitForEndOfFrame()
+    Yield(UnityEngine.WaitForEndOfFrame());
+end
+
+function WaitForSeconds(n)
+    Yield(UnityEngine.WaitForSeconds(n));
+end

@@ -22,6 +22,8 @@ namespace SGK
         public delegate void StartLuaCoroutineDelegate(LuaFunction func, params object[] objs);
         StartLuaCoroutineDelegate _StartLuaCoroutineDelegate;
 
+        System.Action MainAction;
+
         void Awake()
         {
             if (instance != null)
@@ -40,13 +42,19 @@ namespace SGK
             //L.Global.Set<string, XLua.LuaDLL.lua_CSFunction>("ERROR_LOG", CustomSettings.PrintError);
             //L.Global.Set<string, XLua.LuaDLL.lua_CSFunction>("loadstring", CustomSettings.LoadString);
 
-            //IService[] services = gameObject.GetComponents<IService>();
-            //for (int i = 0; i < services.Length; i++)
-            //{
-            //    services[i].Register(L);
-            //}
+            IService[] services = gameObject.GetComponents<IService>();
+            for (int i = 0; i < services.Length; i++)
+            {
+                services[i].Register(L);
+            }
             L.DoString("require 'main'");
 
+
+            MainAction = L.Global.Get<System.Action>("main");
+            if (MainAction != null)
+            {
+                MainAction();
+            }
             //_RegisterEventListener = L.Global.Get<System.Action<object>>("RegisterEventListener");
             //_RemoveEventListener = L.Global.Get<System.Action<object>>("RemoveEventListener");
             //_DispatchEvent = L.Global.Get<DispatchEventDelegate>("DispatchEvent");

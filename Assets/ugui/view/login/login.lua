@@ -5,18 +5,18 @@
 ---
 
 local View = {}
-
-function View:Start()
+local netWork = require('network.networkService')
+function View:Awake()
     print("start scripts")
     local loginBtn = self.LoginBtn
     ChangeUIText(self.LoginText,"登录")
     RegistButtonEvent(loginBtn,self.Call)
 end
 
+
 function View:Call()
-
-
-    print("Call")
+    local connectStatus = netWork.Connect("127.0.0.1","10001")
+    --print("Call",connectStatus)
 end
 
 return View

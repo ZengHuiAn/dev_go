@@ -18,9 +18,13 @@ namespace SGK
         [CSharpCallLua]
         public delegate void LuaObjectAction(object lauObject, params object[] args);
 
-        LuaObjectAction l_Start;
-        LuaObjectAction l_OnDestroy;
-        LuaObjectAction l_Update;
+        [CSharpCallLua]
+        public delegate void LuaOnAction();
+
+        LuaObjectAction l_Awake;
+        LuaOnAction l_Start;
+        LuaOnAction l_OnDestroy;
+        LuaOnAction l_Update;
         LuaObjectAction l_onEvent;
 
         public string luaScriptFileName = "";
@@ -38,11 +42,13 @@ namespace SGK
             //}
             args = new object[1];
             args[0] = gameObject;
+
+            StartWithScript(luaScriptFileName, luaObject, args);
         }
 
         void Start()
         {
-            StartWithScript(luaScriptFileName, luaObject, args);
+            if (l_Start != null) l_Start();
         }
 
         public void StartWithScript(string luaScriptFileName, LuaTable luaObject, params object[] args)
@@ -57,7 +63,7 @@ namespace SGK
             if (this.luaObject != null && this.luaObject != luaObject)
             {
                 this.luaObject.Dispose();
-                l_Start = null;
+                l_Awake = null;
                 l_OnDestroy = null;
                 l_Update = null;
                 l_onEvent = null;
@@ -79,26 +85,29 @@ namespace SGK
             {
                 luaObject.Set(injection.name, injection.value);
             }
-            l_Start = luaObject.Get<LuaObjectAction>("Start");
-            l_OnDestroy = luaObject.Get<LuaObjectAction>("OnDestroy");
+            l_Awake = luaObject.Get<LuaObjectAction>("Awake");
+            l_Start = luaObject.Get<LuaOnAction>("Start");
 
-            l_Update = luaObject.Get<LuaObjectAction>("Update");
+
+            l_OnDestroy = luaObject.Get<LuaOnAction>("OnDestroy");
+
+            l_Update = luaObject.Get<LuaOnAction>("Update");
             l_onEvent = luaObject.Get<LuaObjectAction>("onEvent");
 
-            luaStart();
+            luaAwake();
         }
 
-        void luaStart()
+        void luaAwake()
         {
-            if (l_Start != null)
+            if (l_Awake != null)
             {
                 if (args != null)
                 {
-                    l_Start(luaObject, args);
+                    l_Awake(luaObject, args);
                 }
                 else
                 {
-                    l_Start(luaObject);
+                    l_Awake(luaObject);
                 }
             }
             LuaController.RegisterEventListener(luaObject);
@@ -107,10 +116,7 @@ namespace SGK
 
         void Update()
         {
-#if UNITY_EDITOR && USER_NGUI
-            UpdateNGUI();
-#endif
-            if (scriptIsReady && l_Update != null) l_Update(luaObject);
+            if (scriptIsReady && l_Update != null) l_Update();
         }
 
         void OnEnable()
@@ -137,8 +143,9 @@ namespace SGK
             }
             scriptIsReady = false;
 
-            if (l_OnDestroy != null && L != null) l_OnDestroy(luaObject);
+            if (l_OnDestroy != null && L != null) l_OnDestroy();
 
+            l_Awake = null;
             l_Start = null;
             l_OnDestroy = null;
             l_Update = null;
