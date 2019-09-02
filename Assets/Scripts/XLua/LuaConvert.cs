@@ -78,7 +78,7 @@ namespace Snake
                 case AMF_TYPE.String:
                     if (luaTable == null)
                     {
-                        luaTable = LuaController.Instance.LuaEnv.NewTable();
+                        luaTable = SGK.LuaController.GetLuaState()?.NewTable();
                     }
 
                     luaTable.Set<int, object>(luaTable.Length + 1, body);
@@ -97,7 +97,7 @@ namespace Snake
                     }
 
 
-                    LuaTable tb = LuaController.Instance.LuaEnv.NewTable();
+                    LuaTable tb = SGK.LuaController.GetLuaState()?.NewTable();
                     for (int i = 0; i < obs.Length; i++)
                     {
                         ConvertLuaTable(obs[i], tb);

@@ -43,13 +43,15 @@ public static class ExampleGenConfig
                 typeof(ParticleSystem),
                 typeof(SkinnedMeshRenderer),
                 typeof(Renderer),
-                typeof(Light), 
+                typeof(Light),
                 typeof(Mathf),
                 typeof(System.Collections.Generic.List<int>),
                 typeof(Action<string>),
+                typeof(Action),
                 typeof(UnityEngine.Debug),
                 typeof(Snake.LuaConvert),
-                typeof(Snake.Client)
+                typeof(Snake.Client),
+                typeof(LuaManager),
             };
 
     //C#静态调用Lua的配置（包括事件的原型），仅可以配delegate，interface
