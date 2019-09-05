@@ -6,15 +6,7 @@ local function Read()
     if  conn == nil then
         return
     end
-    StartCoroutine(function()
-        while true
-        do
-            print("卡死？")
-            WaitForSeconds(1)
-            local valueTB = conn:Read()
-
-        end
-    end)
+    local valueTB = conn:BegainRead(0)
 end
 
 
@@ -29,6 +21,7 @@ local function Connect(host, port)
     conn = CS.Snake.Client()
     local result = conn:Connect(host, port)
     Read();
+
     return result
 end
 local nextSN = 0
@@ -50,14 +43,29 @@ local function Send(cmd, data, sn)
     end
 end
 
+local function Close()
+    if conn then
+        conn:Close()
+        conn = nil
+    end
+end
 
 
+local function ReadBuffer()
+    if conn and conn.Connected then
+       local reader = conn:GetBuffer()
+        fmt.Println(reader)
+        return reader
+    end
+    return nil
+end
 
 
 
 return {
     Connect = Connect,
     Send = Send,
-    Read = Read
+    Read = ReadBuffer,
+    Close = Close
 }
 
