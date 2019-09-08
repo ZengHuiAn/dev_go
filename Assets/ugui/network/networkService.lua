@@ -53,8 +53,15 @@ end
 
 local function ReadBuffer()
     if conn and conn.Connected then
-       local reader = conn:GetBuffer()
-        fmt.Println(reader)
+       local reader = conn:PopData()
+
+        if reader then
+            print(sprinttb(reader))
+            fmt.Println("Lua net work reader",reader)
+        else
+            fmt.Println("un have reader")
+        end
+
         return reader
     end
     return nil

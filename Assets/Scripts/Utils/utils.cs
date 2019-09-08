@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Utils
 {
-    class utils
+    public class utils
     {
 
         static void LogFunction(object value)
