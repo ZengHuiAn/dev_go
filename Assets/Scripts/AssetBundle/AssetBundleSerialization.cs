@@ -15,6 +15,7 @@ public class AssetBundleSerialization : ScriptableObject
     {
         public string FileName;
         public bool isChange;
+        public string GUID;
     }
     public List<AssetBundleInfo>  abInfos = new List<AssetBundleInfo>();
     private static AssetBundleSerialization _instance;
@@ -22,8 +23,7 @@ public class AssetBundleSerialization : ScriptableObject
     {
         get
         {
-            if (!_instance)
-                _instance = Resources.FindObjectsOfTypeAll<AssetBundleSerialization>().FirstOrDefault();
+
 #if UNITY_EDITOR
             if (!_instance)
             {

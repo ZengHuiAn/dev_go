@@ -61,32 +61,7 @@ namespace Snake
 
             return client.Connected;
         }
-        [LuaCallCSharp]
-        public LuaTable Read()
-        {
-            if (client.Connected)
-            {
-                NetworkStream stream = client.GetStream();
-                //
-                System.IO.BinaryReader reader = new BinaryReader(stream);
-                byte[] headerBuffer = new byte[12];
-                reader.Read(headerBuffer, 0, headerBuffer.Length);
-                header = ConvertHeader(headerBuffer);
-                UInt32 length = 12;
-                UInt32 bodyLength = header.Length - length;
-
-                byte[] bodyBytes = new byte[bodyLength];
-                using (MemoryStream m_stream = new MemoryStream())
-                {
-                    m_stream.Write(bodyBytes, 0, (int)m_stream.Length);
-                    LuaTable msgTable = SGK.LuaController.GetLuaState()?.NewTable();
-                    object body = amf.Decode(m_stream);
-
-                    return LuaConvert.ConvertLuaTable(body);
-                }
-            }
-            return null;
-        }
+       
 
         [LuaCallCSharp]
         public bool CanRead()
@@ -129,9 +104,10 @@ namespace Snake
                 return;
             }
 
-            ClientHeader header = ConvertHeader(headerBuff);
-            UInt32 bodyLength = header.Length - 12;
-            Debug.Log("bodyLength:" + header.Length);
+            ClientHeader cheader = ConvertHeader(headerBuff);
+            this.header = cheader;
+            UInt32 bodyLength = this.header.Length - 12;
+            Utils.utils.Log("bodyLength:", cheader);
             BegainRead(Convert.ToInt32(bodyLength));
         }
         public void DataCallback(IAsyncResult ar)
@@ -148,37 +124,40 @@ namespace Snake
                 return;
             }
             Utils.utils.Log(this.header);
-            LuaTable header;
+            LuaTable result;
             using (MemoryStream m_stream = new MemoryStream())
             {
                 m_stream.Write(dataBuffer, 0, (int)m_stream.Length);
                 LuaTable msgTable = SGK.LuaController.GetLuaState()?.NewTable();
                 object body = amf.Decode(m_stream);
-                header = LuaConvert.ConvertLuaTable(this.header);
+                var header = LuaConvert.ConvertLuaTable(this.header);
+                Utils.utils.Log("headr:", this.header, LuaConvert.ConvertObjects(header));
+                var bodyTable = LuaConvert.ConvertLuaTable(body, header);
+                result = SGK.LuaController.GetLuaState().NewTable();
+                result.Set<int, LuaTable>(1,header);
 
-                header = LuaConvert.ConvertLuaTable(body, header);
+                result.Set<int, LuaTable>(2, bodyTable);
             }
 
-            if (header != null)
+            if (result != null)
             {
-                Utils.utils.Log("Header Add", header);
-                this.cache.Add(header);
+                Utils.utils.Log("Header Add", LuaConvert.ConvertObjects(result));
+                this.cache.Add(result);
             }
 
 
             BegainRead(0);
         }
-        int idx = 0;
         [LuaCallCSharp]
-        public LuaTable GetBuffer()
+        public LuaTable PopData()
         {
-            if (this.cache.Count == idx)
+            if (this.cache.Count == 0)
             {
                 return null;
             }
             Debug.Log(this.cache.Count);
-            LuaTable tb = this.cache[idx];
-            idx++;
+            LuaTable tb = this.cache[0];
+            this.cache.Remove(tb);
             return tb;
         }
 

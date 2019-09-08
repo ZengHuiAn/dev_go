@@ -13,7 +13,7 @@ public struct ReferenceLog
     public byte[][] Bytes;
 };
 
-enum AMF_TYPE
+public enum AMF_TYPE
 {
     Invalid,
     Bool,

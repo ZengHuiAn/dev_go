@@ -68,6 +68,7 @@ namespace Snake
 
         public static LuaTable ConvertLuaTable(object body, LuaTable luaTable = null)
         {
+            
             AMF_TYPE tp = utils.GetObjectType(body);
             switch (tp)
             {
