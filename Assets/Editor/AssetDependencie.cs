@@ -39,7 +39,9 @@ public class AssetDependencie
 
         var guid = AssetDatabase.AssetPathToGUID(assetPath);
         string[] depens = AssetDatabase.GetDependencies(assetPath);
-        SaveInfo si = new SaveInfo(assetOb.name, assetPath, assetOb, assetOb.GetType());
+
+        var extenName = Path.GetExtension(assetPath);
+        SaveInfo si = new SaveInfo(assetOb.name + extenName, assetPath, assetOb, assetOb.GetType());
         var localParent = m_SimpleTreeView.AddForChild(parent, si.GetDisplayName(), si);
 
         for (int i = 0; i < depens.Length; i++)
@@ -65,9 +67,9 @@ public class AssetDependencie
 
         foreach (var itemPath in subPaths)
         {
-            GetDependenciesForPath(m_SimpleTreeView, localParent, itemPath);
+            GetDependenciesForPath(m_SimpleTreeView, localParent, itemPath.Replace('\\', '/'));
         }
-        
+
         var allAssets = Snake.FileUtils.GetRelativePath(path);
         var ret = Directory.GetFiles(path);
         Debug.Log(ret.Length);

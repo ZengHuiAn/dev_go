@@ -26,12 +26,6 @@ public enum AMF_TYPE
     Default
 }
 
-struct MyStruct
-{
-    public string str;
-    public int length;
-
-}
 
 public  class amf
 {

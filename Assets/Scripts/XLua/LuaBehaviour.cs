@@ -31,15 +31,9 @@ namespace SGK
         public LuaTable luaObject = null;
         public Injection[] injections;
         public object[] args = null;
-        bool lateLoad = false;
-        bool scriptIsReady = false;
 
         void Awake()
         {
-            //if (L != null && !string.IsNullOrEmpty(luaScriptFileName))
-            //{
-            //    luaObject = loadDelegate();
-            //}
             args = new object[1];
             args[0] = gameObject;
 
@@ -111,17 +105,16 @@ namespace SGK
                 }
             }
             LuaController.RegisterEventListener(luaObject);
-            scriptIsReady = true;
         }
 
         void Update()
         {
-            if (scriptIsReady && l_Update != null) l_Update();
+            if ( l_Update != null) l_Update();
         }
 
         void OnEnable()
         {
-            if (scriptIsReady && luaObject != null)
+            if (luaObject != null)
             {
                 LuaController.RegisterEventListener(luaObject);
             }
@@ -129,7 +122,7 @@ namespace SGK
 
         void OnDisable()
         {
-            if (scriptIsReady && luaObject != null && L != null)
+            if ( luaObject != null && L != null)
             {
                 LuaController.RemoveEventListener(luaObject);
             }
@@ -137,11 +130,6 @@ namespace SGK
 
         void OnDestroy()
         {
-            if (!scriptIsReady)
-            {
-                return;
-            }
-            scriptIsReady = false;
 
             if (l_OnDestroy != null && L != null) l_OnDestroy();
 
