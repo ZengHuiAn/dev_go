@@ -69,6 +69,19 @@ namespace Snake
             string content = FileUtils.ReadFile(filepath, convertName, ".lua");
             return content;
         }
+        
+        /*
+         * 获取相对路径
+         */
+        public static string GetRelativePath(string path)
+        {
+            var relativePath = path.Substring(Application.dataPath.Length - 6);
+
+            return relativePath;
+        }
 
     }
+    
+    
+
 }
