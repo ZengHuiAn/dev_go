@@ -1,20 +1,21 @@
 fileFormatVersion: 2
 guid: 24123b2fcdc15c943bed44e0c6beeec7
 labels:
-- Tween
-- Tweening
 - Animation
-- HOTween
-- Paths
-- VisualScripting
-- VisualEditor
-- iTween
-- LeanTween
 - DFTween
 - Ease
 - Easing
-- Shake
+- HOTween
+- LeanTween
+- Newtyoe
+- Paths
 - Punch
+- Shake
+- Tween
+- Tweening
+- VisualEditor
+- VisualScripting
+- iTween
 TextScriptImporter:
   externalObjects: {}
   userData: 
