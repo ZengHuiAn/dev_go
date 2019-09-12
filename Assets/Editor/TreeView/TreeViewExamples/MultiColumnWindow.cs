@@ -14,8 +14,8 @@ namespace UnityEditor.TreeViewExamples
 		[SerializeField] TreeViewState m_TreeViewState; // Serialized in the window layout file so it survives assembly reloading
 		[SerializeField] MultiColumnHeaderState m_MultiColumnHeaderState;
 		SearchField m_SearchField;
-		MultiColumnTreeView m_TreeView;
-		MyTreeAsset m_MyTreeAsset;
+        MultiColumnTreeView m_TreeView;
+        MyTreeAsset m_MyTreeAsset;
 
 		[MenuItem("TreeView Examples/Multi Columns")]
 		public static MultiColumnWindow GetWindow ()
