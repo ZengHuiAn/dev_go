@@ -27,8 +27,8 @@ namespace UnityEditor.TreeViewExamples
 			return window;
 		}
 
-		[OnOpenAsset]
-		public static bool OnOpenAsset (int instanceID, int line)
+        [OnOpenAsset]
+        public static bool OnOpenAsset (int instanceID, int line)
 		{
 			var myTreeAsset = EditorUtility.InstanceIDToObject (instanceID) as MyTreeAsset;
 			if (myTreeAsset != null)
