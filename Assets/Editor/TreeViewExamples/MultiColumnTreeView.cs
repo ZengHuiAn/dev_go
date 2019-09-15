@@ -148,16 +148,7 @@ namespace UnityEditor.TreeViewExamples
 				switch (sortOption)
 				{
 					case SortOption.Name:
-						orderedQuery = orderedQuery.ThenBy(l => l.data.name, ascending);
-						break;
-					case SortOption.Value1:
-						orderedQuery = orderedQuery.ThenBy(l => l.data.floatValue1, ascending);
-						break;
-					case SortOption.Value2:
-						orderedQuery = orderedQuery.ThenBy(l => l.data.floatValue2, ascending);
-						break;
-					case SortOption.Value3:
-						orderedQuery = orderedQuery.ThenBy(l => l.data.floatValue3, ascending);
+						orderedQuery = orderedQuery.ThenBy(l => ((TreeElement) l.data).name, ascending);
 						break;
 				}
 			}
@@ -172,31 +163,21 @@ namespace UnityEditor.TreeViewExamples
 			switch (sortOption)
 			{
 				case SortOption.Name:
-					return myTypes.Order(l => l.data.name, ascending);
+					return myTypes.Order(l => ((TreeElement) l.data).name, ascending);
 				case SortOption.Value1:
-					return myTypes.Order(l => l.data.floatValue1, ascending);
+					return   myTypes.Order(l => ((MyTreeElement) l.data).path, ascending);
 				case SortOption.Value2:
-					return myTypes.Order(l => l.data.floatValue2, ascending);
-				case SortOption.Value3:
-					return myTypes.Order(l => l.data.floatValue3, ascending);
+					return   myTypes.Order(l => (((MyTreeElement) l.data).eObject ? ((MyTreeElement) l.data).eObject.name : "") , ascending);
 				default:
 					Assert.IsTrue(false, "Unhandled enum");
 					break;
 			}
 
 			// default
-			return myTypes.Order(l => l.data.name, ascending);
+			return myTypes.Order(l => ((TreeElement) l.data).name, ascending);
 		}
-
-		int GetIcon1Index(TreeViewItem<MyTreeElement> item)
-		{
-			return (int)(Mathf.Min(0.99f, item.data.floatValue1) * s_TestIcons.Length);
-		}
-
-		int GetIcon2Index (TreeViewItem<MyTreeElement> item)
-		{
-			return Mathf.Min(item.data.text.Length, s_TestIcons.Length-1);
-		}
+		
+		
 
 		protected override void RowGUI (RowGUIArgs args)
 		{
@@ -215,16 +196,6 @@ namespace UnityEditor.TreeViewExamples
 
 			switch (column)
 			{
-				case MyColumns.Icon1:
-					{
-						GUI.DrawTexture(cellRect, s_TestIcons[GetIcon1Index(item)], ScaleMode.ScaleToFit);
-					}
-					break;
-				case MyColumns.Icon2:
-					{
-						GUI.DrawTexture(cellRect, s_TestIcons[GetIcon2Index(item)], ScaleMode.ScaleToFit);
-					}
-					break;
 
 				case MyColumns.Name:
 					{
@@ -233,40 +204,24 @@ namespace UnityEditor.TreeViewExamples
 						toggleRect.x += GetContentIndent(item);
 						toggleRect.width = kToggleWidth;
 						if (toggleRect.xMax < cellRect.xMax)
-							item.data.enabled = EditorGUI.Toggle(toggleRect, item.data.enabled); // hide when outside cell rect
+//							item.data.enabled = EditorGUI.Toggle(toggleRect, item.data.enabled); // hide when outside cell rect
 
 						// Default icon and label
 						args.rowRect = cellRect;
 						base.RowGUI(args);
 					}
 					break;
-
 				case MyColumns.Value1:
 				case MyColumns.Value2:
-				case MyColumns.Value3:
 					{
 						if (showControls)
 						{
 							cellRect.xMin += 5f; // When showing controls make some extra spacing
-
-							if (column == MyColumns.Value1)
-								item.data.floatValue1 = EditorGUI.Slider(cellRect, GUIContent.none, item.data.floatValue1, 0f, 1f);
+							
 							if (column == MyColumns.Value2)
-								item.data.material = (Material)EditorGUI.ObjectField(cellRect, GUIContent.none, item.data.material, typeof(Material), false);
-							if (column == MyColumns.Value3)
-								item.data.text = GUI.TextField(cellRect, item.data.text);
-						}
-						else
-						{
-							string value = "Missing";
+								item.data.eObject = (UnityEngine.Object)EditorGUI.ObjectField(cellRect, GUIContent.none, item.data.eObject, typeof(UnityEngine.Object), true);
 							if (column == MyColumns.Value1)
-								value = item.data.floatValue1.ToString("f5");
-							if (column == MyColumns.Value2)
-								value = item.data.floatValue2.ToString("f5");
-							if (column == MyColumns.Value3)
-								value = item.data.floatValue3.ToString("f5");
-
-							DefaultGUI.LabelRightAligned(cellRect, value, args.selected, args.focused);
+								item.data.path = GUI.TextField(cellRect, item.data.path);
 						}
 					}
 					break;
@@ -289,7 +244,7 @@ namespace UnityEditor.TreeViewExamples
 			if (args.acceptedRename)
 			{
 				var element = treeModel.Find(args.itemID);
-				element.name = args.newName;
+				((TreeElement) element).name = args.newName;
 				Reload();
 			}
 		}
@@ -352,7 +307,7 @@ namespace UnityEditor.TreeViewExamples
 				},
 				new MultiColumnHeaderState.Column 
 				{
-					headerContent = new GUIContent("Multiplier", "In sed porta ante. Nunc et nulla mi."),
+					headerContent = new GUIContent("path", "In sed porta ante. Nunc et nulla mi."),
 					headerTextAlignment = TextAlignment.Right,
 					sortedAscending = true,
 					sortingArrowAlignment = TextAlignment.Left,
@@ -362,7 +317,7 @@ namespace UnityEditor.TreeViewExamples
 				},
 				new MultiColumnHeaderState.Column 
 				{
-					headerContent = new GUIContent("Material", "Maecenas congue non tortor eget vulputate."),
+					headerContent = new GUIContent("Object", "Maecenas congue non tortor eget vulputate."),
 					headerTextAlignment = TextAlignment.Right,
 					sortedAscending = true,
 					sortingArrowAlignment = TextAlignment.Left,

@@ -14,8 +14,8 @@ namespace UnityEditor.TreeViewExamples
 		[SerializeField] TreeViewState m_TreeViewState; // Serialized in the window layout file so it survives assembly reloading
 		[SerializeField] MultiColumnHeaderState m_MultiColumnHeaderState;
 		SearchField m_SearchField;
-        MultiColumnTreeView m_TreeView;
-        MyTreeAsset m_MyTreeAsset;
+		MultiColumnTreeView m_TreeView;
+		MyTreeAsset m_MyTreeAsset;
 
 		[MenuItem("TreeView Examples/Multi Columns")]
 		public static MultiColumnWindow GetWindow ()
@@ -27,8 +27,8 @@ namespace UnityEditor.TreeViewExamples
 			return window;
 		}
 
-        [OnOpenAsset]
-        public static bool OnOpenAsset (int instanceID, int line)
+		[OnOpenAsset]
+		public static bool OnOpenAsset (int instanceID, int line)
 		{
 			var myTreeAsset = EditorUtility.InstanceIDToObject (instanceID) as MyTreeAsset;
 			if (myTreeAsset != null)
@@ -99,9 +99,9 @@ namespace UnityEditor.TreeViewExamples
 		{
 			if (m_MyTreeAsset != null && m_MyTreeAsset.treeElements != null && m_MyTreeAsset.treeElements.Count > 0)
 				return m_MyTreeAsset.treeElements;
-
+		
 			// generate some test data
-			return MyTreeElementGenerator.GenerateRandomTree(130); 
+//			return MyTreeElementGenerator.GenerateRandomTree(1); 
 		}
 
 		void OnSelectionChange ()
