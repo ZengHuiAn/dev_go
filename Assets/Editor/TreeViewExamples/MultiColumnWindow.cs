@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor.Callbacks;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
+using  Utils;
 
 
 namespace UnityEditor.TreeViewExamples
@@ -99,9 +100,12 @@ namespace UnityEditor.TreeViewExamples
 		{
 			if (m_MyTreeAsset != null && m_MyTreeAsset.treeElements != null && m_MyTreeAsset.treeElements.Count > 0)
 				return m_MyTreeAsset.treeElements;
-		
+			
+//			AssetDependencie.Instance.GetDependenciesForPath(Application.dataPath+"/AssetBundle/");
 			// generate some test data
-//			return MyTreeElementGenerator.GenerateRandomTree(1); 
+			var list = AssetDependencie.Instance.GetForPath(Application.dataPath+"/AssetBundle/");
+			utils.Log(list);
+			return list; 
 		}
 
 		void OnSelectionChange ()

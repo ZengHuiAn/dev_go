@@ -158,17 +158,17 @@ public class AssetBundleGenerateWindow : EditorWindow
 
     public void SetTreeView()
     {
-        if (this.showType == ShowType.SingleAsset)
-        {
-            AssetDependencie.Instance.GetDependenciesForObject(m_SimpleTreeView, m_SimpleTreeView.root,scriptableObject);
-        }
-        else
-        {
-            AssetDependencie.Instance.GetDependenciesForPath(m_SimpleTreeView, m_SimpleTreeView.root,selectAssetPath);
-        }
-        
-        m_SimpleTreeView.Reload();
-        createScrollView = true;
+//        if (this.showType == ShowType.SingleAsset)
+//        {
+//            AssetDependencie.Instance.GetDependenciesForObject(m_SimpleTreeView, m_SimpleTreeView.root,scriptableObject);
+//        }
+//        else
+//        {
+//            AssetDependencie.Instance.GetDependenciesForPath(m_SimpleTreeView, m_SimpleTreeView.root,selectAssetPath);
+//        }
+//        
+//        m_SimpleTreeView.Reload();
+//        createScrollView = true;
     }
 
     void DrawSearch()

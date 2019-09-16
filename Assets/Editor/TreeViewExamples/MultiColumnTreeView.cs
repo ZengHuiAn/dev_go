@@ -221,7 +221,7 @@ namespace UnityEditor.TreeViewExamples
 							if (column == MyColumns.Value2)
 								item.data.eObject = (UnityEngine.Object)EditorGUI.ObjectField(cellRect, GUIContent.none, item.data.eObject, typeof(UnityEngine.Object), true);
 							if (column == MyColumns.Value1)
-								item.data.path = GUI.TextField(cellRect, item.data.path);
+								GUI.Label(cellRect, item.data.path);
 						}
 					}
 					break;

@@ -6,9 +6,8 @@ namespace UnityEditor.TreeViewExamples
 {
 
 	[Serializable]
-	internal class MyTreeElement : TreeElement
+	public class MyTreeElement : TreeElement
 	{
-		public string name;
 		public string path;
 		public UnityEngine.Object eObject;
 
@@ -16,6 +15,12 @@ namespace UnityEditor.TreeViewExamples
 		{
 			eObject = null;
 			path = Application.dataPath;
+		}
+
+		public void Init( UnityEngine.Object eObject,string path)
+		{
+			this.eObject = eObject;
+			this.path = path;
 		}
 	}
 }

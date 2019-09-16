@@ -75,6 +75,11 @@ namespace Snake
          */
         public static string GetRelativePath(string path)
         {
+            if (!path.Contains(Application.dataPath))
+            {
+                return path;
+            }
+            
             var relativePath = path.Substring(Application.dataPath.Length - 6);
 
             return relativePath;
