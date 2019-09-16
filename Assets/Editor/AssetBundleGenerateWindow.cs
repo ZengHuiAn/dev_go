@@ -1,15 +1,17 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.IMGUI.Controls;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-public class TestWindow : EditorWindow
+public class AssetBundleGenerateWindow : EditorWindow
 {
-    [MenuItem("Window/TestWindow")]
+    [MenuItem("Window/AssetBundleGenerateWindow")]
     public static void init()
     {
-        EditorWindow.CreateInstance<TestWindow>().Show();
+        EditorWindow.CreateInstance<AssetBundleGenerateWindow>().Show();
     }
 
     #region 选择属性
@@ -36,8 +38,8 @@ public class TestWindow : EditorWindow
     public bool createScrollView = false;
 
 
-    [SerializeField]
-    public string path = "";
+    [FormerlySerializedAs("path")] [SerializeField]
+    public string selectAssetPath = "";
 
     private void OnEnable()
     {
@@ -107,15 +109,15 @@ public class TestWindow : EditorWindow
         #region 选择路径框
         GUILayout.BeginHorizontal();
 
-        if (path.Equals(""))
+        if (selectAssetPath.Equals(""))
         {
-            path = Application.dataPath + "/AssetBundle";
+            selectAssetPath = Application.dataPath + "/AssetBundle";
         }
 
-        path = GUILayout.TextArea(path, GUILayout.ExpandWidth(true), GUILayout.Height(20));
+        selectAssetPath = GUILayout.TextArea(selectAssetPath, GUILayout.ExpandWidth(true), GUILayout.Height(20));
         if (GUILayout.Button("选择路径", GUILayout.ExpandWidth(true), GUILayout.Height(20)))
         {
-            path = EditorUtility.OpenFolderPanel("选择要检查资源的路径", Application.dataPath, "");
+            selectAssetPath = EditorUtility.OpenFolderPanel("选择要检查资源的路径", Application.dataPath, "");
         }
         GUILayout.EndHorizontal();
         #endregion
@@ -133,6 +135,7 @@ public class TestWindow : EditorWindow
 
         if (GUILayout.Button("获取依赖", GUILayout.ExpandWidth(true), GUILayout.Height(20)))
         {
+            ConsoleE.Api.ClearLog();
             if (m_TreeViewState == null)
                 m_TreeViewState = new TreeViewState();
             m_SimpleTreeView = new GenerateTreeview<SaveInfo>("AssetBundle依赖查找工具", null, m_TreeViewState);
@@ -141,7 +144,6 @@ public class TestWindow : EditorWindow
 
             m_searchField.downOrUpArrowKeyPressed += m_SimpleTreeView.SetFocusAndEnsureSelectedItem;
             GetDependencie();
-            Debug.Log(this.createScrollView);
         }
     }
 
@@ -156,9 +158,17 @@ public class TestWindow : EditorWindow
 
     public void SetTreeView()
     {
-        AssetDependencie.Instance.GetDependenciesForObject(m_SimpleTreeView, scriptableObject);
-        m_SimpleTreeView.Reload();
-        createScrollView = true;
+//        if (this.showType == ShowType.SingleAsset)
+//        {
+//            AssetDependencie.Instance.GetDependenciesForObject(m_SimpleTreeView, m_SimpleTreeView.root,scriptableObject);
+//        }
+//        else
+//        {
+//            AssetDependencie.Instance.GetDependenciesForPath(m_SimpleTreeView, m_SimpleTreeView.root,selectAssetPath);
+//        }
+//        
+//        m_SimpleTreeView.Reload();
+//        createScrollView = true;
     }
 
     void DrawSearch()

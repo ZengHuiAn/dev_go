@@ -37,7 +37,7 @@ namespace XLuaTest
             get;
             set;
         }
-
+        [XLua.LuaCallCSharp]
         public event System.Action<int, double> AEvent;
 
         public int this[string field]

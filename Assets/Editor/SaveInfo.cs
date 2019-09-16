@@ -39,7 +39,7 @@ public class SaveInfo
     {
         this.displayName = displayName ?? throw new ArgumentNullException(nameof(displayName));
         this.path = path ?? throw new ArgumentNullException(nameof(path));
-        this.asset = asset ?? throw new ArgumentNullException(nameof(asset));
+        this.asset = asset;
     }
 
     public SaveInfo(string displayName, string path, UnityEngine.Object asset, Type type) : this(displayName, path, asset)
@@ -49,6 +49,6 @@ public class SaveInfo
 
     public string GetDisplayName()
     {
-        return string.Format("{0}\t type:{1}", this.displayName, this.type.Name);
+        return string.Format("{0}\t type:{1} \t path:{2}", this.displayName, this.type.Name,this.path);
     }
 }
