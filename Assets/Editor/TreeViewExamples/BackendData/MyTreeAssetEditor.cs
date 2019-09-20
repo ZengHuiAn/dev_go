@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor.IMGUI.Controls;
+using Debug = System.Diagnostics.Debug;
 
 
 namespace UnityEditor.TreeViewExamples
@@ -20,8 +21,26 @@ namespace UnityEditor.TreeViewExamples
 
 		void OnEnable ()
 		{
+			if (asset.Path.Equals(""))
+			{
+				return;
+			}
 			Undo.undoRedoPerformed += OnUndoRedoPerformed;
 
+			this.initTreeView();
+			this.isInit = true;
+		}
+
+		private bool isInit = false;
+		
+		
+		void initTreeView()
+		{
+			if (isInit)
+			{
+				return;
+			}
+			UnityEngine.Debug.Log("初始化一次");
 			var treeViewState = new TreeViewState ();
 			var jsonState = SessionState.GetString (kSessionStateKeyPrefix + asset.GetInstanceID (), "");
 			if (!string.IsNullOrEmpty (jsonState))
@@ -30,17 +49,20 @@ namespace UnityEditor.TreeViewExamples
 			m_TreeView = new MyTreeView(treeViewState, treeModel);
 			m_TreeView.beforeDroppingDraggedItems += OnBeforeDroppingDraggedItems;
 			m_TreeView.Reload ();
-
 			m_SearchField = new SearchField ();
-			
 			m_SearchField.downOrUpArrowKeyPressed += m_TreeView.SetFocusAndEnsureSelectedItem;
 		}
+		
 
 
 		void OnDisable ()
 		{
+			if (asset.Path.Equals("") || m_TreeView == null)
+			{
+				return;
+			}
 			Undo.undoRedoPerformed -= OnUndoRedoPerformed;
-
+			
 			SessionState.SetString (kSessionStateKeyPrefix + asset.GetInstanceID (), JsonUtility.ToJson (m_TreeView.state));
 		}
 
@@ -60,10 +82,25 @@ namespace UnityEditor.TreeViewExamples
 
 		public override void OnInspectorGUI ()
 		{
-			GUILayout.Space (5f);
-			ToolBar ();
-			GUILayout.Space (3f);
+			this.DrawSelectPathPanel();
 
+			if (asset.Path.Equals(""))
+			{
+				return;
+			}
+
+			if (!this.isInit)
+			{
+				return;
+			}
+			
+//			GUILayout.Space (5f);
+//			ToolBar ();
+//			GUILayout.Space (3f);
+			if (m_TreeView == null)
+			{
+				return;
+			}
 			const float topToolbarHeight = 20f;
 			const float spacing = 2f;
 			float totalHeight = m_TreeView.totalHeight + topToolbarHeight + 2 * spacing;
@@ -72,6 +109,23 @@ namespace UnityEditor.TreeViewExamples
 			Rect multiColumnTreeViewRect = new Rect (rect.x, rect.y + topToolbarHeight + spacing, rect.width, rect.height - topToolbarHeight - 2 * spacing);
 			SearchBar (toolbarRect);
 			DoTreeView (multiColumnTreeViewRect);
+		}
+
+		void DrawSelectPathPanel()
+		{
+			asset.Path = GUILayout.TextArea(asset.Path, GUILayout.ExpandWidth(true), GUILayout.Height(20));
+			if (GUILayout.Button("选择路径", GUILayout.ExpandWidth(true), GUILayout.Height(20)))
+			{
+				asset.Path = EditorUtility.OpenFolderPanel("选择要检查资源的路径", Application.dataPath, asset.Path);
+				if (!asset.Path.Equals(""))
+				{
+					asset.Init();
+					this.initTreeView();
+					this.isInit = true;
+					m_TreeView?.treeModel.SetData (asset.treeElements);
+					m_TreeView?.Reload();
+				}
+			}
 		}
 
 		void SearchBar (Rect rect)

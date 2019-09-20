@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
+using Utils;
+using Debug = UnityEngine.Debug;
 
 
 namespace UnityEditor.TreeViewExamples
@@ -50,7 +52,6 @@ namespace UnityEditor.TreeViewExamples
 			m_Data = data;
 			if (m_Data.Count > 0)
 				m_Root = TreeElementUtility.ListToTree(data);
-
 			m_MaxID = m_Data.Max(e => e.id);
 		}
 
